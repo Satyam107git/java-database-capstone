@@ -1,3 +1,144 @@
+/* adminDashboard.js
+   Handles Admin Dashboard logic for managing doctors
+*/
+
+import { openModal } from "../components/modals.js";
+import {
+  getDoctors,
+  filterDoctors,
+  saveDoctor,
+} from "../services/doctorServices.js";
+import { createDoctorCard } from "../components/doctorCard.js";
+
+/* ---------- DOM Loaded ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+  // Load all doctors on page load
+  loadDoctorCards();
+
+  // Search & filter listeners
+  const searchBar = document.getElementById("searchBar");
+  const filterTime = document.getElementById("filterTime");
+  const filterSpecialty = document.getElementById("filterSpecialty");
+
+  if (searchBar) {
+    searchBar.addEventListener("input", filterDoctorsOnChange);
+  }
+  if (filterTime) {
+    filterTime.addEventListener("change", filterDoctorsOnChange);
+  }
+  if (filterSpecialty) {
+    filterSpecialty.addEventListener("change", filterDoctorsOnChange);
+  }
+});
+
+/* ---------- Load All Doctors ---------- */
+async function loadDoctorCards() {
+  try {
+    const doctors = await getDoctors();
+    renderDoctorCards(doctors);
+  } catch (error) {
+    console.error("Error loading doctors:", error);
+  }
+}
+
+/* ---------- Render Doctor Cards ---------- */
+function renderDoctorCards(doctors) {
+  const contentDiv = document.getElementById("content");
+  contentDiv.innerHTML = "";
+
+  if (!doctors || doctors.length === 0) {
+    contentDiv.innerHTML = `<p class="noPatientRecord">No doctors found.</p>`;
+    return;
+  }
+
+  doctors.forEach((doctor) => {
+    const card = createDoctorCard(doctor);
+    contentDiv.appendChild(card);
+  });
+}
+
+/* ---------- Filter Doctors ---------- */
+async function filterDoctorsOnChange() {
+  try {
+    const name =
+      document.getElementById("searchBar")?.value.trim() || null;
+    const time =
+      document.getElementById("filterTime")?.value || null;
+    const specialty =
+      document.getElementById("filterSpecialty")?.value || null;
+
+    const doctors = await filterDoctors(name, time, specialty);
+
+    if (!doctors || doctors.length === 0) {
+      renderDoctorCards([]);
+      return;
+    }
+
+    renderDoctorCards(doctors);
+  } catch (error) {
+    console.error("Error filtering doctors:", error);
+    alert("Unable to filter doctors");
+  }
+}
+
+/* ---------- Add Doctor (Modal Submit) ---------- */
+window.adminAddDoctor = async function () {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Unauthorized. Please login again.");
+      return;
+    }
+
+    // Collect form values
+    const name = document.getElementById("docName").value.trim();
+    const email = document.getElementById("docEmail").value.trim();
+    const phone = document.getElementById("docPhone").value.trim();
+    const password = document.getElementById("docPassword").value.trim();
+    const specialty = document.getElementById("docSpecialty").value.trim();
+
+    // Collect availability checkboxes
+    const availableTimes = [];
+    document
+      .querySelectorAll("input[name='availability']:checked")
+      .forEach((cb) => availableTimes.push(cb.value));
+
+    const doctor = {
+      name,
+      email,
+      phone,
+      password,
+      specialty,
+      availableTimes,
+    };
+
+    const result = await saveDoctor(doctor, token);
+
+    if (result.success) {
+      alert(result.message || "Doctor added successfully");
+      document.getElementById("modal").style.display = "none";
+      loadDoctorCards();
+    } else {
+      alert(result.message || "Failed to add doctor");
+    }
+  } catch (error) {
+    console.error("Error adding doctor:", error);
+    alert("Something went wrong while adding doctor");
+  }
+};
+
+/* ---------- Add Doctor Button (Header) ---------- */
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.id === "addDocBtn") {
+    openModal("addDoctor");
+  }
+});
+
+
+
+
+
+
 /*
   This script handles the admin dashboard functionality for managing doctors:
   - Loads all doctor cards

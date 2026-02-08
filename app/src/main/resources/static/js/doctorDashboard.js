@@ -1,3 +1,111 @@
+/* doctorDashboard.js
+   Handles Doctor Dashboard appointment management
+*/
+
+import { getAllAppointments } from "./services/appointmentRecordService.js";
+import { createPatientRow } from "./components/patientRows.js";
+
+/* ---------- Global Variables ---------- */
+
+// Table body where appointment rows will be rendered
+const tableBody = document.getElementById("patientTableBody");
+
+// Selected date (default = today)
+let selectedDate = new Date().toISOString().split("T")[0];
+
+// Authentication token
+const token = localStorage.getItem("token");
+
+// Patient name filter (used in search)
+let patientName = null;
+
+/* ---------- Search Bar Listener ---------- */
+const searchBar = document.getElementById("searchBar");
+if (searchBar) {
+  searchBar.addEventListener("input", () => {
+    const value = searchBar.value.trim();
+    patientName = value ? value : "null";
+    loadAppointments();
+  });
+}
+
+/* ---------- Today's Appointments Button ---------- */
+const todayButton = document.getElementById("todayButton");
+const datePicker = document.getElementById("datePicker");
+
+if (todayButton) {
+  todayButton.addEventListener("click", () => {
+    selectedDate = new Date().toISOString().split("T")[0];
+    if (datePicker) {
+      datePicker.value = selectedDate;
+    }
+    loadAppointments();
+  });
+}
+
+/* ---------- Date Picker Listener ---------- */
+if (datePicker) {
+  datePicker.addEventListener("change", () => {
+    selectedDate = datePicker.value;
+    loadAppointments();
+  });
+}
+
+/* ---------- Load Appointments ---------- */
+async function loadAppointments() {
+  try {
+    tableBody.innerHTML = "";
+
+    const appointments = await getAllAppointments(
+      selectedDate,
+      patientName,
+      token
+    );
+
+    if (!appointments || appointments.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="noPatientRecord">
+            No Appointments found for today.
+          </td>
+        </tr>`;
+      return;
+    }
+
+    appointments.forEach((appointment) => {
+      const patient = {
+        id: appointment.patient.id,
+        name: appointment.patient.name,
+        phone: appointment.patient.phone,
+        email: appointment.patient.email,
+        appointmentId: appointment.id,
+      };
+
+      const row = createPatientRow(patient);
+      tableBody.appendChild(row);
+    });
+  } catch (error) {
+    console.error("Error loading appointments:", error);
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="5" class="noPatientRecord">
+          Error loading appointments. Try again later.
+        </td>
+      </tr>`;
+  }
+}
+
+/* ---------- Initial Load ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof renderContent === "function") {
+    renderContent();
+  }
+  loadAppointments();
+});
+
+
+
+
 /*
   Import getAllAppointments to fetch appointments from the backend
   Import createPatientRow to generate a table row for each patient appointment
