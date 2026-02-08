@@ -1,3 +1,191 @@
+/* =====================================================
+   adminDashboard.css – Stylesheet for Admin Dashboard
+   ===================================================== */
+
+/* ---------- Global Reset ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- Base HTML & Body ---------- */
+html, body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* ---------- Layout Wrapper ---------- */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ---------- Main Content Section ---------- */
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    background-image: url("../images/background/index.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* ---------- Section Heading ---------- */
+h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 50px;
+    color: #003e3e;
+}
+
+/* ---------- Search Bar ---------- */
+#searchBar {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 20px;
+
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#searchBar:focus {
+    outline: none;
+    border-color: #A62B1F;
+}
+
+/* ---------- Filter Section ---------- */
+.filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.filters select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filters select:focus {
+    outline: none;
+    border-color: #A62B1F;
+}
+
+/* ---------- Primary Buttons ---------- */
+button {
+    background-color: #A62B1F;
+    color: white;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 10px 20px;
+    margin-top: 20px;
+    width: 200px;
+
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* ---------- Admin Button ---------- */
+.adminBtn {
+    background-color: #f4f4f4;
+    color: #333;
+
+    font-weight: bold;
+    width: 110px;
+    padding: 10px 0;
+
+    border: none;
+    cursor: pointer;
+}
+
+.adminBtn:hover {
+    color: #A62B1F;
+}
+
+/* ---------- Doctor Cards Container ---------- */
+#content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* ---------- Modal ---------- */
+.modal {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Hidden by default */
+.hidden {
+    display: none;
+}
+
+/* ---------- Modal Body ---------- */
+#modal-body {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    min-width: 350px;
+}
+
+/* ---------- Modal Close Button ---------- */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* ---------- Responsive Design ---------- */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+    }
+
+    #searchBar {
+        width: 100%;
+    }
+
+    #content {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 /*this is the style sheet for the adminDashboard. */
 
 /* 

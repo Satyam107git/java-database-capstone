@@ -1,3 +1,148 @@
+/* header.js
+   Reusable dynamic header component
+*/
+
+function renderHeader() {
+    const headerDiv = document.getElementById("header");
+    if (!headerDiv) return;
+
+    /* 1. Do not show role-based header on home page */
+    if (window.location.pathname.endsWith("/")) {
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("token");
+
+        headerDiv.innerHTML = `
+            <header class="header">
+                <div class="logo-section">
+                    <img src="../assets/images/logo/logo.png" alt="Hospital CMS Logo" class="logo-img">
+                    <span class="logo-title">Hospital CMS</span>
+                </div>
+            </header>
+        `;
+        return;
+    }
+
+    /* 2. Read session info */
+    const role = localStorage.getItem("userRole");
+    const token = localStorage.getItem("token");
+
+    /* 3. Handle invalid or expired session */
+    if (
+        (role === "loggedPatient" || role === "admin" || role === "doctor") &&
+        !token
+    ) {
+        localStorage.removeItem("userRole");
+        alert("Session expired or invalid login. Please log in again.");
+        window.location.href = "/";
+        return;
+    }
+
+    /* 4. Base header layout */
+    let headerContent = `
+        <header class="header">
+            <div class="logo-section">
+                <img src="../assets/images/logo/logo.png" alt="Hospital CMS Logo" class="logo-img">
+                <span class="logo-title">Hospital CMS</span>
+            </div>
+            <nav>
+    `;
+
+    /* 5. Role-based navigation */
+    if (role === "admin") {
+        headerContent += `
+            <button id="addDocBtn" class="adminBtn">Add Doctor</button>
+            <a href="#" id="logoutBtn">Logout</a>
+        `;
+    } else if (role === "doctor") {
+        headerContent += `
+            <button id="doctorHomeBtn" class="adminBtn">Home</button>
+            <a href="#" id="logoutBtn">Logout</a>
+        `;
+    } else if (role === "patient") {
+        headerContent += `
+            <button id="patientLogin" class="adminBtn">Login</button>
+            <button id="patientSignup" class="adminBtn">Sign Up</button>
+        `;
+    } else if (role === "loggedPatient") {
+        headerContent += `
+            <button id="patientHomeBtn" class="adminBtn">Home</button>
+            <button id="patientAppointments" class="adminBtn">Appointments</button>
+            <a href="#" id="logoutPatientBtn">Logout</a>
+        `;
+    }
+
+    /* 6. Close header */
+    headerContent += `
+            </nav>
+        </header>
+    `;
+
+    /* 7. Inject header */
+    headerDiv.innerHTML = headerContent;
+
+    /* 8. Attach listeners */
+    attachHeaderButtonListeners();
+}
+
+/* ---------- Event Listeners ---------- */
+function attachHeaderButtonListeners() {
+    const addDocBtn = document.getElementById("addDocBtn");
+    if (addDocBtn) {
+        addDocBtn.addEventListener("click", () => openModal("addDoctor"));
+    }
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+    }
+
+    const logoutPatientBtn = document.getElementById("logoutPatientBtn");
+    if (logoutPatientBtn) {
+        logoutPatientBtn.addEventListener("click", logoutPatient);
+    }
+
+    const doctorHomeBtn = document.getElementById("doctorHomeBtn");
+    if (doctorHomeBtn) {
+        doctorHomeBtn.addEventListener("click", () => {
+            window.location.href = "/doctor/doctorDashboard";
+        });
+    }
+
+    const patientHomeBtn = document.getElementById("patientHomeBtn");
+    if (patientHomeBtn) {
+        patientHomeBtn.addEventListener("click", () => {
+            window.location.href = "/pages/loggedPatientDashboard.html";
+        });
+    }
+
+    const patientAppointments = document.getElementById("patientAppointments");
+    if (patientAppointments) {
+        patientAppointments.addEventListener("click", () => {
+            window.location.href = "/pages/patientAppointments.html";
+        });
+    }
+}
+
+/* ---------- Logout Functions ---------- */
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    window.location.href = "/";
+}
+
+function logoutPatient() {
+    localStorage.removeItem("token");
+    localStorage.setItem("userRole", "patient");
+    window.location.href = "/pages/patientDashboard.html";
+}
+
+/* ---------- Initialize Header ---------- */
+renderHeader();
+
+
+
+
+
 /*
   Step-by-Step Explanation of Header Section Rendering
 
