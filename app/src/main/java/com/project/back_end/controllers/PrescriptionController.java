@@ -3,7 +3,7 @@ package com.project.back_end.controllers;
 
 import com.project.back_end.models.Prescription;
 import com.project.back_end.services.PrescriptionService;
-import com.project.back_end.services.Service;
+import com.project.back_end.services.AppService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +15,11 @@ import java.util.Map;
 public class PrescriptionController {
 
     private final PrescriptionService prescriptionService;
-    private final Service service;
+    private final AppService service;
 
     // Constructor Injection
     public PrescriptionController(PrescriptionService prescriptionService,
-                                  Service service) {
+                                  AppService service) {
         this.prescriptionService = prescriptionService;
         this.service = service;
     }

@@ -49,7 +49,7 @@ public class PatientService {
 
         Map<String, Object> response = new HashMap<>();
 
-        String email = tokenService.extractEmail(token);
+        String email = tokenService.extractIdentifier(token);
         Patient patient = patientRepository.findByEmail(email);
 
         if (patient == null || !patient.getId().equals(id)) {
@@ -148,7 +148,7 @@ public class PatientService {
 
         Map<String, Object> response = new HashMap<>();
 
-        String email = tokenService.extractEmail(token);
+        String email = tokenService.extractIdentifier(token);
 
         Patient patient = patientRepository.findByEmail(email);
 

@@ -65,7 +65,7 @@ public class TokenService {
     // ==========================================================
     public String extractIdentifier(String token) {
 
-        Claims claims = Jwts.parserBuilder()
+        Claims claims = Jwts.parser()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
@@ -80,7 +80,7 @@ public class TokenService {
     public boolean validateToken(String token, String user) {
 
         try {
-            Claims claims = Jwts.parserBuilder()
+            Claims claims = Jwts.parser()
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token)

@@ -11,9 +11,10 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import com.project.back_end.DTO.Login;
 
 @Service
-public class Service {
+public class AppService {
 
     private final TokenService tokenService;
     private final AdminRepository adminRepository;
@@ -22,7 +23,7 @@ public class Service {
     private final DoctorService doctorService;
     private final PatientService patientService;
 
-    public Service(TokenService tokenService,
+    public AppService(TokenService tokenService,
                    AdminRepository adminRepository,
                    DoctorRepository doctorRepository,
                    PatientRepository patientRepository,
@@ -177,7 +178,7 @@ public class Service {
             String token) {
 
         try {
-            String email = tokenService.extractEmail(token);
+            String email = tokenService.extractIdentifier(token);
             Patient patient = patientRepository.findByEmail(email);
 
             if (patient == null)
