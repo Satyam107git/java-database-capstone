@@ -3,13 +3,13 @@
 function selectRole(role) {
   setRole(role);
   const token = localStorage.getItem('token');
-  if (role === "admin") {
+  if (role === "ADMIN") {
     if (token) {
       window.location.href = `/adminDashboard/${token}`;
     }
-  } if (role === "patient") {
+  } else if (role === "PATIENT") {
     window.location.href = "/pages/patientDashboard.html";
-  } else if (role === "doctor") {
+  } else if (role === "DOCTOR") {
     if (token) {
       window.location.href = `/doctorDashboard/${token}`;
     } else if (role === "loggedPatient") {
