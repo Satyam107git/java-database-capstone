@@ -31,8 +31,8 @@ window.onload = function () {
 /* ---------- Admin Login Handler ---------- */
 window.adminLoginHandler = async function () {
     try {
-        const username = document.getElementById("adminUsername").value;
-        const password = document.getElementById("adminPassword").value;
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("assword").value;
 
         const admin = { username, password };
 
@@ -51,7 +51,7 @@ window.adminLoginHandler = async function () {
 
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        selectRole("admin");
+        selectRole("ADMIN");
 
     } catch (error) {
         console.error(error);
@@ -62,27 +62,25 @@ window.adminLoginHandler = async function () {
 /* ---------- Doctor Login Handler ---------- */
 window.doctorLoginHandler = async function () {
     try {
-        const email = document.getElementById("doctorEmail").value;
-        const password = document.getElementById("doctorPassword").value;
+        const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-        const doctor = { email, password };
+    const doctor = { identifier: email, password };
 
-        const response = await fetch(DOCTOR_API, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(doctor)
-        });
+    const response = await fetch(DOCTOR_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(doctor)
+    });
 
-        if (!response.ok) {
-            alert("Invalid credentials!");
-            return;
-        }
+    if (!response.ok) {
+        alert("Invalid credentials!");
+        return;
+    }
 
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        selectRole("doctor");
+    const data = await response.json();
+    localStorage.setItem("token", data.token);
+    selectRole("DOCTOR");
 
     } catch (error) {
         console.error(error);
